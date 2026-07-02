@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>小口订餐系统</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #f5f5f5; padding: 10px; }
+  .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 15px; }
+  .header h1 { font-size: 20px; }
+  .tabs { display: flex; background: white; border-radius: 12px; margin-bottom: 15px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .tab { flex: 1; padding: 12px; text-align: center; cursor: pointer; font-size: 14px; border-bottom: 3px solid transparent; }
+  .tab.active { border-bottom-color: #667eea; color: #667eea; font-weight: bold; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .card { background: white; border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .date-picker { width: 100%; padding: 10px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px; margin-bottom: 15px; }
+  .person-item { display: flex; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0; }
+  .person-item:last-child { border-bottom: none; }
+  .person-name { flex: 1; font-size: 16px; font-weight: 500; }
+  .meal-toggles { display: flex; gap: 8px; }
+  .meal-btn { padding: 6px 12px; border: 2px solid #e0e0e0; border-radius: 20px; background: white; cursor: pointer; font-size: 13px; transition: all 0.3s; }
+  .meal-btn.active { background: #667eea; color: white; border-color: #667eea; }
+  .meal-btn.breakfast.active { background: #ff6b6b; border-color: #ff6b6b; }
+  .meal-btn.lunch.active { background: #4ecdc4; border-color: #4ecdc4; }
+  .meal-btn.dinner.active { background: #45b7d1; border-color: #45b7d1; }
+  .summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+  .summary-item { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 15px; border-radius: 12px; text-align: center; }
+  .summary-item.breakfast { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%); }
+  .summary-item.lunch { background: linear-gradient(135deg, #4ecdc4 0%, #44b09e 100%); }
+  .summary-item.dinner { background: linear-gradient(135deg, #45b7d1 0%, #3498db 100%); }
+  .summary-num { font-size: 32px; font-weight: bold; }
+  .summary-label { font-size: 13px; opacity: 0.9; }
+  table { width: 100%; border-collapse: collapse; background: white; border-radius: 12px; overflow: hidden; }
+  th, td { padding: 10px; text-align: center; font-size: 14px; }
+  th { background: #667eea; color: white; }
+  tr:nth-child(even) { background: #f8f9fa; }
+  .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; font-weight: 500; }
+  .btn-primary { background: #667eea; color: white; }
+  .btn-success { background: #4ecdc4; color: white; }
+  .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px; background: white; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .history-date { font-size: 16px; font-weight: 500; }
+  .history-counts { display: flex; gap: 15px; font-size: 14px; color: #666; }
+  .empty { text-align: center; padding: 40px; color: #999; }
+  .save-btn { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); padding: 15px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; box-shadow: 0 4px 15px rgba(102,126,234,0.4); cursor: pointer; }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🍽️ 小口订餐系统</h1>
+  <p style="margin-top:8px;opacity:0.9;font-size:14px;">16人订餐统计</p>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('order')">订餐</div>
+  <div class="tab" onclick="switchTab('summary')">汇总</div>
+  <div class="tab" onclick="switchTab('history')">历史</div>
+</div>
+
+<!-- 订餐页 -->
+<div id="page-order" class="page active">
+  <div class="card">
+    <input type="date" id="orderDate" class="date-picker" onchange="loadOrder()">
+  </div>
+  <div class="card" id="orderList"></div>
+  <button class="save-btn" onclick="saveOrder()">💾 保存订餐</button>
+</div>
+
+<!-- 汇总页 -->
+<div id="page-summary" class="page">
+  <div class="card">
+    <input type="date" id="summaryDate" class="date-picker" onchange="loadSummary()">
+  </div>
+  <div class="summary-grid">
+    <div class="summary-item breakfast">
+      <div class="summary-num" id="breakfastCount">0</div>
+      <div class="summary-label">早餐</div>
+    </div>
+    <div class="summary-item lunch">
+      <div class="summary-num" id="lunchCount">0</div>
+      <div class="summary-label">午餐</div>
+    </div>
+    <div class="summary-item dinner">
+      <div class="summary-num" id="dinnerCount">0</div>
+      <div class="summary-label">晚餐</div>
+    </div>
+  </div>
+  <div class="card">
+    <table>
+      <thead><tr><th>姓名</th><th>早餐</th><th>午餐</th><th>晚餐</th></tr></thead>
+      <tbody id="summaryTable"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- 历史页 -->
+<div id="page-history" class="page">
+  <div id="historyList"></div>
+</div>
+
+<script>
+const PERSONS = ["张瑶","钟征祥","吴志强","张汝杰","黄滢","韩艾冰","万梦思","区转开","余晓星","梁杏彤","吴迪勇","林健生","李威","李浩飞","陈淑芳","刘思益"];
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+}
+
+function loadData() {
+  const d = localStorage.getItem('canteen_data');
+  return d ? JSON.parse(d) : {};
+}
+
+function saveData(data) {
+  localStorage.setItem('canteen_data', JSON.stringify(data));
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById('page-' + tab).classList.add('active');
+  if (tab === 'order') loadOrder();
+  if (tab === 'summary') loadSummary();
+  if (tab === 'history') loadHistory();
+}
+
+let currentOrders = {};
+
+function loadOrder() {
+  const dt = document.getElementById('orderDate').value || todayStr();
+  document.getElementById('orderDate').value = dt;
+  const data = loadData();
+  currentOrders = data[dt] || {};
+  renderOrderList();
+}
+
+function renderOrderList() {
+  const html = PERSONS.map(p => {
+    const o = currentOrders[p] || {b: false, l: false, d: false};
+    return `<div class="person-item">
+      <div class="person-name">${p}</div>
+      <div class="meal-toggles">
+        <div class="meal-btn breakfast ${o.b ? 'active' : ''}" onclick="toggleMeal('${p}','b',this)">早</div>
+        <div class="meal-btn lunch ${o.l ? 'active' : ''}" onclick="toggleMeal('${p}','l',this)">午</div>
+        <div class="meal-btn dinner ${o.d ? 'active' : ''}" onclick="toggleMeal('${p}','d',this)">晚</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('orderList').innerHTML = html;
+}
+
+function toggleMeal(person, meal, el) {
+  if (!currentOrders[person]) currentOrders[person] = {b: false, l: false, d: false};
+  currentOrders[person][meal] = !currentOrders[person][meal];
+  el.classList.toggle('active');
+}
+
+function saveOrder() {
+  const dt = document.getElementById('orderDate').value || todayStr();
+  const data = loadData();
+  data[dt] = currentOrders;
+  saveData(data);
+  alert('✅ 保存成功！');
+  loadSummary();
+}
+
+function loadSummary() {
+  const dt = document.getElementById('summaryDate').value || todayStr();
+  document.getElementById('summaryDate').value = dt;
+  const data = loadData();
+  const record = data[dt] || {};
+  let b=0, l=0, d=0;
+  const rows = PERSONS.map(p => {
+    const r = record[p] || {b: false, l: false, d: false};
+    if (r.b) b++; if (r.l) l++; if (r.d) d++;
+    return `<tr><td>${p}</td><td>${r.b ? '✓' : ''}</td><td>${r.l ? '✓' : ''}</td><td>${r.d ? '✓' : ''}</td></tr>`;
+  }).join('');
+  document.getElementById('breakfastCount').textContent = b;
+  document.getElementById('lunchCount').textContent = l;
+  document.getElementById('dinnerCount').textContent = d;
+  document.getElementById('summaryTable').innerHTML = rows;
+}
+
+function loadHistory() {
+  const data = loadData();
+  const dates = Object.keys(data).sort().reverse();
+  if (dates.length === 0) {
+    document.getElementById('historyList').innerHTML = '<div class="empty">暂无历史记录</div>';
+    return;
+  }
+  const html = dates.map(dt => {
+    const record = data[dt];
+    let b=0, l=0, d=0;
+    PERSONS.forEach(p => {
+      const r = record[p] || {};
+      if (r.b) b++; if (r.l) l++; if (r.d) d++;
+    });
+    return `<div class="history-item">
+      <div class="history-date">${dt}</div>
+      <div class="history-counts">
+        <span>早:${b}</span><span>午:${l}</span><span>晚:${d}</span>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('historyList').innerHTML = html;
+}
+
+// 初始化
+document.getElementById('orderDate').value = todayStr();
+document.getElementById('summaryDate').value = todayStr();
+loadOrder();
+</script>
+</body>
+</html>
