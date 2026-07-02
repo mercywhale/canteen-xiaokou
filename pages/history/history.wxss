@@ -1,0 +1,11 @@
+/* pages/history/history.wxss */
+.container{padding:20rpx}
+.list{display:flex;flex-direction:column;gap:16rpx}
+.item{background:#fff;border-radius:16rpx;padding:24rpx;box-shadow:0 2rpx 10rpx rgba(0,0,0,.05)}
+.date-title{font-size:30rpx;font-weight:700;margin-bottom:16rpx;color:#333}
+.chips{display:flex;gap:12rpx;flex-wrap:wrap}
+.chip{padding:8rpx 20rpx;border-radius:30rpx;font-size:24rpx;color:#fff;font-weight:600}
+.chip.breakfast{background:#FF9800}
+.chip.lunch{background:#2196F3}
+.chip.dinner{background:#9C27B0}
+.empty{text-align:center;padding:80rpx 0;color:#888;font-size:28rpx}

@@ -1,0 +1,19 @@
+/* pages/summary/summary.wxss */
+.container{padding:20rpx}
+.date-bar{display:flex;align-items:center;gap:16rpx;margin-bottom:24rpx;background:#fff;border-radius:16rpx;padding:20rpx 24rpx;box-shadow:0 2rpx 12rpx rgba(0,0,0,.06)}
+.label{font-size:28rpx;color:#888;white-space:nowrap}
+.date-picker{flex:1;border:1px solid #E0E0E0;border-radius:12rpx;padding:12rpx 20rpx;font-size:28rpx;text-align:center}
+.btn-today{background:#4CAF50!important;color:#fff!important;font-size:26rpx!important;border-radius:12rpx!important}
+.cards{display:flex;gap:16rpx;margin-bottom:24rpx}
+.card{flex:1;border-radius:16rpx;padding:24rpx 16rpx;text-align:center;color:#fff}
+.card.breakfast{background:linear-gradient(135deg,#FF9800,#F57C00)}
+.card.lunch{background:linear-gradient(135deg,#2196F3,#1565C0)}
+.card.dinner{background:linear-gradient(135deg,#9C27B0,#6A1B9A)}
+.count{font-size:56rpx;font-weight:800}
+.card .label{font-size:24rpx;opacity:.9;color:#fff;margin-top:8rpx}
+.table{background:#fff;border-radius:16rpx;overflow:hidden;box-shadow:0 2rpx 10rpx rgba(0,0,0,.05)}
+.table-header,.table-row{display:flex;padding:16rpx 24rpx;border-bottom:1px solid #F5F5F5;font-size:28rpx}
+.table-header{background:#F5F5F5;font-weight:700;color:#888}
+.col-name{flex:1}
+.col-meal{width:80rpx;text-align:center}
+.empty{text-align:center;padding:80rpx 0;color:#888;font-size:28rpx}

@@ -1,0 +1,14 @@
+<!--pages/history/history.wxml-->
+<view class="container">
+  <view class="list">
+    <view class="item" wx:for="{{list}}" wx:key="date" bindtap="jumpToDate" data-date="{{item.date}}">
+      <view class="date-title">📆 {{item.dateText}}</view>
+      <view class="chips">
+        <text class="chip breakfast">早餐 {{item.breakfast}}人</text>
+        <text class="chip lunch">午餐 {{item.lunch}}人</text>
+        <text class="chip dinner">晚餐 {{item.dinner}}人</text>
+      </view>
+    </view>
+  </view>
+  <view wx:if="{{!list.length}}" class="empty">暂无历史记录</view>
+</view>

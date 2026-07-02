@@ -1,0 +1,32 @@
+<!--pages/order/order.wxml-->
+<view class="container">
+  <view class="date-bar">
+    <text class="label">日期</text>
+    <picker mode="date" value="{{date}}" bindchange="onDateChange">
+      <view class="date-picker">{{dateText}}</view>
+    </picker>
+    <button class="btn-today" size="mini" bindtap="setToday">今天</button>
+  </view>
+
+  <view class="person-list">
+    <view class="person-card" wx:for="{{persons}}" wx:key="index">
+      <view class="avatar" style="background:{{avatars[index]}}">{{item.slice(0,1)}}</view>
+      <view class="name">{{item}}</view>
+      <view class="toggles">
+        <view class="toggle breakfast {{orders[item].b?'active':''}}" bindtap="toggleMeal" data-name="{{item}}" data-meal="b">
+          <view class="badge">早</view>
+        </view>
+        <view class="toggle lunch {{orders[item].l?'active':''}}" bindtap="toggleMeal" data-name="{{item}}" data-meal="l">
+          <view class="badge">午</view>
+        </view>
+        <view class="toggle dinner {{orders[item].d?'active':''}}" bindtap="toggleMeal" data-name="{{item}}" data-meal="d">
+          <view class="badge">晚</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="save-bar">
+    <button class="btn-save" bindtap="saveOrder">💾 保存订餐记录</button>
+  </view>
+</view>

@@ -1,0 +1,42 @@
+<!--pages/summary/summary.wxml-->
+<view class="container">
+  <view class="date-bar">
+    <text class="label">日期</text>
+    <picker mode="date" value="{{date}}" bindchange="onDateChange">
+      <view class="date-picker">{{dateText}}</view>
+    </picker>
+    <button class="btn-today" size="mini" bindtap="setToday">今天</button>
+  </view>
+
+  <view class="cards">
+    <view class="card breakfast">
+      <view class="count">{{breakfast}}</view>
+      <view class="label">早餐（人份）</view>
+    </view>
+    <view class="card lunch">
+      <view class="count">{{lunch}}</view>
+      <view class="label">午餐（人份）</view>
+    </view>
+    <view class="card dinner">
+      <view class="count">{{dinner}}</view>
+      <view class="label">晚餐（人份）</view>
+    </view>
+  </view>
+
+  <view class="table">
+    <view class="table-header">
+      <text class="col-name">姓名</text>
+      <text class="col-meal">早</text>
+      <text class="col-meal">午</text>
+      <text class="col-meal">晚</text>
+    </view>
+    <view class="table-row" wx:for="{{detail}}" wx:key="name">
+      <text class="col-name">{{item.name}}</text>
+      <text class="col-meal">{{item.b ? '✓' : '–'}}</text>
+      <text class="col-meal">{{item.l ? '✓' : '–'}}</text>
+      <text class="col-meal">{{item.d ? '✓' : '–'}}</text>
+    </view>
+  </view>
+
+  <view wx:if="{{!detail.length}}" class="empty">该日期暂无订餐记录</view>
+</view>

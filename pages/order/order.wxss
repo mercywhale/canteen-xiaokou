@@ -1,0 +1,17 @@
+/* pages/order/order.wxss */
+.container{padding-bottom:120rpx}
+.date-bar{display:flex;align-items:center;gap:16rpx;margin:20rpx;background:#fff;border-radius:16rpx;padding:20rpx 24rpx;box-shadow:0 2rpx 12rpx rgba(0,0,0,.06)}
+.label{font-size:28rpx;color:#888;white-space:nowrap}
+.date-picker{flex:1;border:1px solid #E0E0E0;border-radius:12rpx;padding:12rpx 20rpx;font-size:28rpx;text-align:center}
+.btn-today{background:#4CAF50!important;color:#fff!important;font-size:26rpx!important;border-radius:12rpx!important}
+.person-list{padding:0 20rpx}
+.person-card{background:#fff;border-radius:16rpx;padding:24rpx;margin-bottom:14rpx;display:flex;align-items:center;box-shadow:0 2rpx 10rpx rgba(0,0,0,.05)}
+.avatar{width:70rpx;height:70rpx;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30rpx;font-weight:700;color:#555;margin-right:20rpx}
+.name{flex:1;font-size:30rpx;font-weight:600}
+.toggles{display:flex;gap:12rpx}
+.toggle .badge{width:80rpx;height:56rpx;border-radius:12rpx;border:3rpx solid #E0E0E0;display:flex;align-items:center;justify-content:center;font-size:24rpx;color:#888;background:#FAFAFA}
+.toggle.breakfast.active .badge{background:#FF9800;border-color:#FF9800;color:#fff}
+.toggle.lunch.active .badge{background:#2196F3;border-color:#2196F3;color:#fff}
+.toggle.dinner.active .badge{background:#9C27B0;border-color:#9C27B0;color:#fff}
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:16rpx 24rpx;box-shadow:0 -4rpx 20rpx rgba(0,0,0,.08);z-index:100}
+.btn-save{width:100%;background:linear-gradient(135deg,#4CAF50,#388E3C);color:#fff;border-radius:16rpx;font-size:32rpx;font-weight:700;letter-spacing:2rpx}
