@@ -23,5 +23,5 @@ pip install flask flask-cors -q
 echo.
 echo 正在启动订餐系统...
 echo.
-python "%~dp0订餐系统.py"
+python "%~dp0dingcan.py"
 pause

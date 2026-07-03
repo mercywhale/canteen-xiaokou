@@ -27,8 +27,8 @@
     },
     "韩艾冰": {
       "b": false,
-      "l": false,
-      "d": false
+      "l": true,
+      "d": true
     },
     "万梦思": {
       "b": false,
@@ -57,8 +57,8 @@
     },
     "林健生": {
       "b": false,
-      "l": false,
-      "d": false
+      "l": true,
+      "d": true
     },
     "李威": {
       "b": false,
@@ -165,9 +165,91 @@
   },
   "2026-07-02": {
     "张瑶": {
+      "b": true,
+      "l": true,
+      "d": true
+    },
+    "钟征祥": {
+      "b": true,
+      "l": true,
+      "d": true
+    },
+    "吴志强": {
+      "b": false,
+      "l": true,
+      "d": true
+    },
+    "张汝杰": {
       "b": false,
       "l": false,
       "d": false
+    },
+    "黄滢": {
+      "b": false,
+      "l": true,
+      "d": true
+    },
+    "韩艾冰": {
+      "b": false,
+      "l": true,
+      "d": true
+    },
+    "万梦思": {
+      "b": false,
+      "l": true,
+      "d": true
+    },
+    "区转开": {
+      "b": false,
+      "l": true,
+      "d": true
+    },
+    "余晓星": {
+      "b": false,
+      "l": false,
+      "d": false
+    },
+    "梁杏彤": {
+      "b": true,
+      "l": true,
+      "d": true
+    },
+    "吴迪勇": {
+      "b": false,
+      "l": false,
+      "d": false
+    },
+    "林健生": {
+      "b": true,
+      "l": false,
+      "d": false
+    },
+    "李威": {
+      "b": false,
+      "l": true,
+      "d": true
+    },
+    "李浩飞": {
+      "b": false,
+      "l": false,
+      "d": false
+    },
+    "陈淑芳": {
+      "b": false,
+      "l": false,
+      "d": false
+    },
+    "刘思益": {
+      "b": false,
+      "l": true,
+      "d": true
+    }
+  },
+  "2026-07-03": {
+    "张瑶": {
+      "b": true,
+      "l": true,
+      "d": true
     },
     "钟征祥": {
       "b": false,
