@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>小口订餐</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Microsoft YaHei',sans-serif;background:#F5F5F5;color:#333;min-height:100vh;padding-bottom:70px}
+.hd{background:linear-gradient(135deg,#4CAF50,#388E3C);color:#fff;padding:14px 16px;text-align:center;position:sticky;top:0;z-index:99}
+.hd .t{font-size:18px;font-weight:700}
+.hd .d{font-size:12px;opacity:.85;margin-top:2px}
+.tabs{display:flex;background:#fff;position:sticky;top:50px;z-index:99;border-bottom:1px solid #E0E0E0}
+.tabs span{flex:1;text-align:center;padding:12px 0;font-size:14px;color:#888;font-weight:600;border-bottom:2px solid transparent}
+.tabs span.on{color:#4CAF50;border-bottom-color:#4CAF50}
+.page{display:none;padding:12px}
+.page.on{display:block}
+.db{display:flex;align-items:center;gap:8px;background:#fff;border-radius:12px;padding:10px 14px;margin-bottom:12px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.db label{font-size:13px;color:#888;white-space:nowrap}
+.db input{flex:1;border:1px solid #E0E0E0;border-radius:8px;padding:8px 10px;font-size:14px;outline:none}
+.db input:focus{border-color:#4CAF50}
+.bt{background:#4CAF50;color:#fff;border:none;border-radius:8px;padding:8px 14px;font-size:13px;white-space:nowrap}
+.card{background:#fff;border-radius:12px;padding:14px;margin-bottom:10px;display:flex;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#555;margin-right:12px;flex-shrink:0}
+.nm{flex:1;font-size:14px;font-weight:600}
+.tgs{display:flex;gap:6px}
+.tg{width:42px;height:30px;border-radius:8px;border:2px solid #E0E0E0;display:flex;align-items:center;justify-content:center;font-size:12px;color:#888;background:#FAFAFA;font-weight:600;transition:.15s}
+.tg.bf.on{background:#FF9800;border-color:#FF9800;color:#fff}
+.tg.lu.on{background:#2196F3;border-color:#2196F3;color:#fff}
+.tg.di.on{background:#9C27B0;border-color:#9C27B0;color:#fff}
+.save{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:10px 16px;box-shadow:0 -2px 12px rgba(0,0,0,.08);z-index:100}
+.save button{width:100%;background:linear-gradient(135deg,#4CAF50,#388E3C);color:#fff;border:none;border-radius:12px;padding:13px;font-size:16px;font-weight:700}
+.cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.cards>div{border-radius:12px;padding:16px 10px;text-align:center;color:#fff}
+.cards .b{background:linear-gradient(135deg,#FF9800,#F57C00)}
+.cards .l{background:linear-gradient(135deg,#2196F3,#1565C0)}
+.cards .d{background:linear-gradient(135deg,#9C27B0,#6A1B9A)}
+.cards .n{font-size:36px;font-weight:800}
+.cards .lb{font-size:12px;margin-top:2px;opacity:.9}
+.tb{background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.tr{display:flex;padding:10px 14px;border-bottom:1px solid #F5F5F5;font-size:13px;align-items:center}
+.th{background:#F5F5F5;font-weight:700;color:#888}
+.tr .c1{flex:1;font-weight:600}
+.tr .c2{width:40px;text-align:center}
+.dot{display:inline-block;width:20px;height:20px;border-radius:50%;line-height:20px;font-size:11px;font-weight:700;text-align:center}
+.dot.y{color:#fff}.dot.n{color:#DDD}
+.dot.b.y{background:#FF9800}.dot.l.y{background:#2196F3}.dot.d.y{background:#9C27B0}
+.hl{margin-top:8px}
+.hi{background:#fff;border-radius:12px;padding:14px;margin-bottom:8px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.hi .dt{font-size:14px;font-weight:700;margin-bottom:8px}
+.hi .chs{display:flex;gap:6px;flex-wrap:wrap}
+.ch{padding:4px 12px;border-radius:14px;font-size:12px;color:#fff;font-weight:600}
+.ch.b{background:#FF9800}.ch.l{background:#2196F3}.ch.d{background:#9C27B0}
+.empty{text-align:center;padding:40px 0;color:#888;font-size:14px}
+.loading{text-align:center;padding:40px 0;color:#888}
+.btns{margin-top:12px}
+.btns button{display:block;width:100%;padding:12px;background:#fff;color:#4CAF50;border:2px solid #4CAF50;border-radius:10px;font-size:14px;font-weight:700;margin-bottom:8px}
+.btns button.warn{border-color:#FF7043;color:#FF7043}
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.75);color:#fff;padding:10px 22px;border-radius:22px;font-size:13px;z-index:999;opacity:0;transition:.3s;pointer-events:none}
+.toast.s{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="hd"><div class="t">🍱 小口订餐</div><div class="d" id="hdDate"></div></div>
+
+<div class="tabs">
+<span class="on" onclick="st('o')">📝 订餐</span>
+<span onclick="st('s')">📊 汇总</span>
+<span onclick="st('h')">📅 历史</span>
+</div>
+
+<!-- 订餐页 -->
+<div id="po" class="page on">
+<div class="db"><label>日期</label><input type="date" id="od" onchange="lo()"><button class="bt" onclick="td('od');lo()">今天</button></div>
+<div id="ol"></div>
+</div>
+<div class="save" id="saveBar"><button onclick="sv()">💾 保存订餐记录</button></div>
+
+<!-- 汇总页 -->
+<div id="ps" class="page">
+<div class="db"><label>日期</label><input type="date" id="sd" onchange="ls()"><button class="bt" onclick="td('sd');ls()">今天</button></div>
+<div class="cards"><div class="b"><div class="n" id="sB">-</div><div class="lb">早餐</div></div><div class="l"><div class="n" id="sL">-</div><div class="lb">午餐</div></div><div class="d"><div class="n" id="sD">-</div><div class="lb">晚餐</div></div></div>
+<div id="sDetail"></div>
+<div class="btns"><button onclick="exDay()">⬇️ 导出当日报表</button><button class="warn" onclick="exAll()">📊 导出全部历史</button></div>
+</div>
+
+<!-- 历史页 -->
+<div id="ph" class="page"><div id="hl"></div></div>
+
+<div class="toast" id="to"></div>
+
+<script>
+var P=["张瑶","钟征祥","吴志强","张汝杰","黄滢","韩艾冰","万梦思","区转开","余晓星","梁杏彤","吴迪勇","林健生","李威","李浩飞","陈淑芳","刘思益"];
+var AC=["#a8edea,#fed6e3","#ffecd2,#fcb69f","#a1c4fd,#c2e9fb","#d4fc79,#96e6a1","#f6d365,#fda085","#89f7fe,#66a6ff"];
+function ts(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
+function fd(s){var d=new Date(s+'T00:00:00');var w=['日','一','二','三','四','五','六'];return d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日（周'+w[d.getDay()]+'）'}
+function td(id){document.getElementById(id).value=ts()}
+function sh(m){var t=document.getElementById('to');t.textContent=m;t.classList.add('s');setTimeout(function(){t.classList.remove('s')},1800)}
+function st(t){
+var ts=['o','s','h'];document.querySelectorAll('.tabs span').forEach(function(s,i){s.classList.toggle('on',ts[i]===t)});
+document.querySelectorAll('.page').forEach(function(p){p.classList.remove('on')});
+document.getElementById('p'+t).classList.add('on');
+document.getElementById('saveBar').style.display=t==='o'?'block':'none';
+if(t==='s')ls();if(t==='h')lh()
+}
+async function api(u,o){var r=await fetch(u,o);return r.json()}
+
+function lo(){
+var d=document.getElementById('od').value;if(!d)return;
+document.getElementById('ol').innerHTML='<div class="loading">加载中...</div>';
+api('/api/order?date='+d).then(function(data){
+var h='';P.forEach(function(n,i){var r=data[n]||{b:false,l:false,d:false};
+h+='<div class="card"><div class="av" style="background:linear-gradient(135deg,'+AC[i%6]+')">'+n[0]+'</div><div class="nm">'+n+'</div><div class="tgs">';
+h+='<div class="tg bf'+(r.b?' on':'')+'" onclick="toggle(this,\''+n+'\',\'b\')">早</div>';
+h+='<div class="tg lu'+(r.l?' on':'')+'" onclick="toggle(this,\''+n+'\',\'l\')">午</div>';
+h+='<div class="tg di'+(r.d?' on':'')+'" onclick="toggle(this,\''+n+'\',\'d\')">晚</div>';
+h+='</div></div>'});
+document.getElementById('ol').innerHTML=h
+}).catch(function(){document.getElementById('ol').innerHTML='<div class="loading">加载失败，请刷新</div>'})
+}
+
+function toggle(el,name,meal){el.classList.toggle('on')}
+
+function sv(){
+var d=document.getElementById('od').value;if(!d){sh('请先选择日期');return}
+var orders={};
+document.querySelectorAll('#ol .tg').forEach(function(el){
+var n=el.getAttribute('onclick').match(/'([^']+)','([^']+)'/);
+if(!orders[n[1]])orders[n[1]]={b:false,l:false,d:false};
+orders[n[1]][n[2]]=el.classList.contains('on')
+});
+fetch('/api/order',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({date:d,orders:orders})}).then(function(){
+sh('保存成功！')
+}).catch(function(){sh('保存失败')})
+}
+
+function ls(){
+var d=document.getElementById('sd').value;if(!d)return;
+document.getElementById('sDetail').innerHTML='<div class="loading">加载中...</div>';
+api('/api/summary?date='+d).then(function(data){
+document.getElementById('sB').textContent=data.breakfast;
+document.getElementById('sL').textContent=data.lunch;
+document.getElementById('sD').textContent=data.dinner;
+var el=document.getElementById('sDetail');
+if(!data.detail.length){el.innerHTML='<div class="empty">该日期暂无订餐记录</div>';return}
+function dot(v,c){return'<span class="dot '+c+' '+(v?'y':'n')+'">'+(v?'✓':'–')+'</span>'}
+var rows=data.detail.map(function(r){return'<div class="tr"><span class="c1">'+r.name+'</span><span class="c2">'+dot(r.b,'b')+'</span><span class="c2">'+dot(r.l,'l')+'</span><span class="c2">'+dot(r.d,'d')+'</span></div>'}).join('');
+el.innerHTML='<div class="tb"><div class="tr th"><span class="c1">姓名</span><span class="c2">早</span><span class="c2">午</span><span class="c2">晚</span></div>'+rows+'</div>'
+}).catch(function(){document.getElementById('sDetail').innerHTML='<div class="loading">加载失败</div>'})
+}
+
+function lh(){
+document.getElementById('hl').innerHTML='<div class="loading">加载中...</div>';
+api('/api/history').then(function(data){
+var el=document.getElementById('hl');
+if(!data.length){el.innerHTML='<div class="empty">暂无历史记录</div>';return}
+el.innerHTML='<div class="hl">'+data.map(function(d){return'<div class="hi" onclick="jd(\''+d.date+'\')"><div class="dt">📆 '+fd(d.date)+'</div><div class="chs"><span class="ch b">早餐 '+d.breakfast+'人</span><span class="ch l">午餐 '+d.lunch+'人</span><span class="ch d">晚餐 '+d.dinner+'人</span></div></div>'}).join('')+'</div>'
+}).catch(function(){document.getElementById('hl').innerHTML='<div class="loading">加载失败</div>'})
+}
+
+function jd(d){document.getElementById('sd').value=d;st('s');ls()}
+
+function exDay(){var d=document.getElementById('sd').value;if(!d){sh('请先选择日期');return};window.open('/api/export?date='+d)}
+function exAll(){window.open('/api/export-all')}
+
+window.onload=function(){
+document.getElementById('hdDate').textContent=fd(ts());
+var t=ts();document.getElementById('od').value=t;document.getElementById('sd').value=t;
+lo()
+}
+</script>
+</body>
+</html>
